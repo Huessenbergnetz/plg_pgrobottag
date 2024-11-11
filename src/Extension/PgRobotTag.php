@@ -21,17 +21,19 @@ class PgRobotTag extends CMSPlugin implements SubscriberInterface
 
     public function addRobotsMetaTag(BeforeCompileHeadEvent $event) : void {
 
-        if (!$this->getApplication()->isClient('site')) {
+        $app = $this->getApplication();
+
+        if (!$app->isClient('site')) {
             return;
         }
 
-        [$context, $item, $params, $page] = array_values($event->getArguments());
+        $option  = $app->getInput()->get('option');
 
-        if (!str_starts_with($context, 'com_phocagallery')) {
+        if ($option !== 'com_phocagallery') {
             return;
         }
 
-        $doc = Factory::getApplication()->getDocument();
+        $doc = $app->getDocument();
         $doc->setMetaData('robots', 'noindex,nofollow');
     }
 }
